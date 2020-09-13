@@ -69,7 +69,7 @@ io.on('disconnect', function () {
 // });
 
 
-const PORT = 5000 || process.env.PORT;
+const PORT = process.env.PORT;
 // const port = 6000 || process.env.PORT;
 // app.listen(PORT , ()=>console.log(`Server started on PORT ${PORT}`));
 server.listen(PORT, ()=>console.log(`Socket server started on PORT ${PORT}`));
