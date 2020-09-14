@@ -11,6 +11,9 @@ const server = http.createServer(app);
 let io = socketIO(server);
 const path = require("path")
 
+const corsOption = {
+  exposedHeaders: ['Authorization','x-auth-token']
+}
 //Middleware
 app.use(express.static('build'));
 app.get('*', function(req, res) {
@@ -26,10 +29,6 @@ mongoose.connect('mongodb+srv://hardik_aswal:grizzlybear@cluster0.zlw0s.mongodb.
 //Middleware
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
-const corsOption = {
-  exposedHeaders: ['Authorization','x-auth-token']
-}
-
 app.use(cors(corsOption));
 app.use("/api/users", users);
 app.use("/api/stories",stories);
