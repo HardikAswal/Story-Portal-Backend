@@ -17,14 +17,15 @@ const corsOption = {
 
 //Middleware
 app.use(express.static('build'));
+app.get('*', function(req, res) {
+  res.sendFile('index.html', {root: path.join(__dirname, './build/')});
+});
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(cors(corsOption));
 app.use("/api/users", users);
 app.use("/api/stories",stories);
-app.get('*', function(req, res) {
-    res.sendFile('index.html', {root: path.join(__dirname, './build/')});
-  });
+
 
 // Connect to MongoDB
 mongoose.connect('mongodb+srv://hardik_aswal:grizzlybear@cluster0.zlw0s.mongodb.net/',{dbName:"pratilipi",useNewUrlParser: true,useUnifiedTopology:true ,useCreateIndex:true,useFindAndModify:false })
