@@ -11,7 +11,6 @@ const server = http.createServer(app);
 let io = socketIO(server);
 const path = require("path")
 
-//Middleware
 app.use(express.static('build'));
 
 app.get('*', function(req, res) {
@@ -20,15 +19,17 @@ app.get('*', function(req, res) {
 
 // Connect to MongoDB
 mongoose.connect('mongodb+srv://hardik_aswal:grizzlybear@cluster0.zlw0s.mongodb.net/',{dbName:"pratilipi",useNewUrlParser: true,useUnifiedTopology:true ,useCreateIndex:true,useFindAndModify:false })
-// mongoose.connect('mongodb://localhost:27017/Pratilipi',{useNewUrlParser: true,useUnifiedTopology:false ,useCreateIndex:true,useFindAndModify:false })  
-.then(() => console.log("MongoDB successfully connected"))
+  .then(() => console.log("MongoDB successfully connected"))
   .catch(err => console.log(err));
 
 const corsOption = {
   exposedHeaders: ['Authorization','x-auth-token']
 }
 
-//Middlewares
+//Middleware
+// app.use(express.static('build'));
+// app.use(express.static('client/build'));
+
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(cors(corsOption));
@@ -39,21 +40,14 @@ app.use("/api/stories",stories);
 // var count = 0;
 // var ipsConnected = [];
 
-// io.on('connection', function (socket) {
-//   console.log( socket.client.conn.server.clientsCount + " users connected" );
-//   socket.emit('counter', {count:io.engine.clientsCount});
-// });
+io.on('connection', function (socket) {
+  console.log( socket.client.conn.server.clientsCount + " users connected" );
+  socket.emit('counter', {count:io.engine.clientsCount});
+});
 
-// io.on('disconnect', function () {
-//   console.log( socket.client.conn.server.clientsCount + " users connected" );
-//   socket.emit('counter', {count:io.engine.clientsCount});
-// });
-
-io.on('connection', function(socket) {
-  console.log(io.sockets.sockets.length);
-  socket.on('disconnect', function() {
-    console.log(io.sockets.sockets.length);
-  });
+io.on('disconnect', function () {
+  console.log( socket.client.conn.server.clientsCount + " users connected" );
+  socket.emit('counter', {count:io.engine.clientsCount});
 });
 
 // io.on('connection', function (socket) {
