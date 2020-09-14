@@ -16,10 +16,10 @@ const corsOption = {
 }
 
 //Middleware
-app.use(express.static('build'));
 app.get('*', function(req, res) {
   res.sendFile('index.html', {root: path.join(__dirname, './build/')});
 });
+app.use(express.static('build'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(cors(corsOption));
