@@ -16,6 +16,14 @@ app.use(express.static('build'));
 app.get('*', function(req, res) {
   res.sendFile('index.html', {root: path.join(__dirname, './build/')});
 });
+
+// Connect to MongoDB
+mongoose.connect('mongodb+srv://hardik_aswal:grizzlybear@cluster0.zlw0s.mongodb.net',{dbName:"pratilipi",useNewUrlParser: true,useUnifiedTopology:true ,useCreateIndex:true,useFindAndModify:false })
+// mongoose.connect('mongodb://localhost:27017/Pratilipi',{useNewUrlParser: true,useUnifiedTopology:false ,useCreateIndex:true,useFindAndModify:false })  
+  .then(() => console.log("MongoDB successfully connected"))
+  .catch(err => console.log(err));
+
+//Middleware
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 const corsOption = {
@@ -25,16 +33,6 @@ const corsOption = {
 app.use(cors(corsOption));
 app.use("/api/users", users);
 app.use("/api/stories",stories);
-
-
-// Connect to MongoDB
-mongoose.connect('mongodb+srv://hardik_aswal:grizzlybear@cluster0.zlw0s.mongodb.net',{dbName:"pratilipi",useNewUrlParser: true,useUnifiedTopology:true ,useCreateIndex:true,useFindAndModify:false })
-// mongoose.connect('mongodb://localhost:27017/Pratilipi',{useNewUrlParser: true,useUnifiedTopology:false ,useCreateIndex:true,useFindAndModify:false })  
-  .then(() => console.log("MongoDB successfully connected"))
-  .catch(err => console.log(err));
-
-
-
 
 //Socket io
 var count = 0;
