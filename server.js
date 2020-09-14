@@ -11,22 +11,24 @@ const server = http.createServer(app);
 let io = socketIO(server);
 const path = require("path")
 
+//Middleware
+app.use(express.static('build'));
+
+app.get('*', function(req, res) {
+    res.sendFile('index.html', {root: path.join(__dirname, './build/')});
+  });
+
+// Connect to MongoDB
+// mongoose.connect('mongodb+srv://hardik_aswal:grizzlybear@cluster0.zlw0s.mongodb.net/',{dbName:"pratilipi",useNewUrlParser: true,useUnifiedTopology:true ,useCreateIndex:true,useFindAndModify:false })
+mongoose.connect('mongodb://localhost:27017/Pratilipi',{useNewUrlParser: true,useUnifiedTopology:false ,useCreateIndex:true,useFindAndModify:false })  
+.then(() => console.log("MongoDB successfully connected"))
+  .catch(err => console.log(err));
+
 const corsOption = {
   exposedHeaders: ['Authorization','x-auth-token']
 }
-//Middleware
-app.use(express.static('build'));
-app.get('*', function(req, res) {
-  res.sendFile('index.html', {root: path.join(__dirname, './build/')});
-});
 
-// Connect to MongoDB
-mongoose.connect('mongodb+srv://hardik_aswal:grizzlybear@cluster0.zlw0s.mongodb.net',{dbName:"pratilipi",useNewUrlParser: true,useUnifiedTopology:true ,useCreateIndex:true,useFindAndModify:false })
-// mongoose.connect('mongodb://localhost:27017/Pratilipi',{useNewUrlParser: true,useUnifiedTopology:false ,useCreateIndex:true,useFindAndModify:false })  
-  .then(() => console.log("MongoDB successfully connected"))
-  .catch(err => console.log(err));
-
-//Middleware
+//Middlewares
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(cors(corsOption));
@@ -34,8 +36,8 @@ app.use("/api/users", users);
 app.use("/api/stories",stories);
 
 //Socket io
-var count = 0;
-var ipsConnected = [];
+// var count = 0;
+// var ipsConnected = [];
 
 // io.on('connection', function (socket) {
 //   console.log( socket.client.conn.server.clientsCount + " users connected" );
@@ -48,11 +50,9 @@ var ipsConnected = [];
 // });
 
 io.on('connection', function(socket) {
-  console.log(io.engine.clientsCount);
-  socket.emit('counter', {count:io.engine.clientsCount});
+  console.log(io.sockets.sockets.length);
   socket.on('disconnect', function() {
-    console.log(io.engine.clientsCount);
-    socket.emit('counter', {count:io.engine.clientsCount});
+    console.log(io.sockets.sockets.length);
   });
 });
 
