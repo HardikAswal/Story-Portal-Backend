@@ -16,8 +16,8 @@ app.use(express.static('build'));
 
 
 // Connect to MongoDB
-mongoose.connect('mongodb+srv://hardik_aswal:grizzlybear@cluster0.zlw0s.mongodb.net/',{dbName:"pratilipi",useNewUrlParser: true,useUnifiedTopology:true ,useCreateIndex:true,useFindAndModify:false })
-//mongoose.connect('mongodb://localhost:27017/Pratilipi',{useNewUrlParser: true,useUnifiedTopology:false ,useCreateIndex:true,useFindAndModify:false })  
+// mongoose.connect('mongodb+srv://hardik_aswal:grizzlybear@cluster0.zlw0s.mongodb.net/',{dbName:"pratilipi",useNewUrlParser: true,useUnifiedTopology:true ,useCreateIndex:true,useFindAndModify:false })
+mongoose.connect('mongodb://localhost:27017/Pratilipi',{useNewUrlParser: true,useUnifiedTopology:false ,useCreateIndex:true,useFindAndModify:false })  
 .then(() => console.log("MongoDB successfully connected"))
   .catch(err => console.log(err));
 
@@ -37,7 +37,7 @@ app.use("/api/stories",stories);
 app.get('*', function(req, res) {
     res.sendFile('index.html', {root: path.join(__dirname, './build/')});
   });
-  
+
 //Socket io
 // var count = 0;
 // var ipsConnected = [];
@@ -53,9 +53,12 @@ app.get('*', function(req, res) {
 // });
 
 io.on('connection', function(socket) {
-  console.log(io.sockets.sockets.length);
+  console.log(io.engine.clientsCount);
+  socket.emit("counter",{count: io.engine.clientsCount})
   socket.on('disconnect', function() {
-    console.log(io.sockets.sockets.length);
+    console.log(io.engine.clientsCount);
+    socket.emit("counter",{count: io.engine.clientsCount})
+
   });
 });
 
@@ -80,7 +83,7 @@ io.on('connection', function(socket) {
 // });
 
 
-const PORT = process.env.PORT;
+const PORT = 5000 || process.env.PORT;
 // const port = 6000 || process.env.PORT;
 // app.listen(PORT , ()=>console.log(`Server started on PORT ${PORT}`));
 server.listen(PORT, ()=>console.log(`Socket server started on PORT ${PORT}`));

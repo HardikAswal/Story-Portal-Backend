@@ -57,7 +57,8 @@ router.post("/login", async(req, res) => {
     role:"User"
   };
 
-  const token = await jwt.sign(payload,keys.secretOrKey,{expiresIn:31556926});
+  const token = await jwt.sign(payload,keys.secret,{expiresIn:31556926});
+  console.log(token);
 
   res.header('x-auth-token',token).send("Successfully logged in.");
   });
